@@ -276,26 +276,14 @@
         <div v-if="syncStatus" style="margin:-14px 0 18px;color:#9fb3ff;font-size:12px;text-align:right;">{{ syncStatus }}</div>
 
         <!-- PTT display -->
-        <div class="card ptt-main" style="margin-bottom:28px;">
+        <div class="card ptt-main" style="margin-bottom:28px;text-align:center;">
             <div class="ptt-number">{{ currentPtt.toFixed(4) }}</div>
-            <div class="ptt-label">目前 Potential</div>
-            <div class="stat-grid">
-                <div class="stat-badge">
-                    <div class="stat-value">{{ best30Count }}/30</div>
-                    <div style="font-size:12px;">Best30 平均</div>
-                    <div style="font-weight:600;">{{ bestAvg.toFixed(3) }}</div>
-                </div>
-                <div class="stat-badge">
-                    <div class="stat-value">{{ recent30Count }}/30</div>
-                    <div style="font-size:12px;">Recent30 平均</div>
-                    <div style="font-weight:600;">{{ recentAvg.toFixed(3) }}</div>
-                </div>
-                <div class="stat-badge">
-                    <div class="stat-value">{{ totalRecords }}</div>
-                    <div style="font-size:12px;">總紀錄數</div>
-                </div>
+            <div class="ptt-label">Your Potential</div>
+            <div style="display:flex;justify-content:center;gap:30px;margin-top:15px;font-size:0.9rem;color:#b7e0ff;">
+                <div>Best 30 Avg: <strong>{{ bestAvg.toFixed(4) }}</strong></div>
+                <div>Recent 10 Avg: <strong>{{ recentAvg.toFixed(4) }}</strong></div>
             </div>
-            <div class="ptt-label" style="margin-top:8px;">PTT = (Best30 + Recent30) / (Best30 數量 + Recent30 數量)</div>
+            <div style="margin-top:12px;font-size:0.75rem;opacity:0.6;">公式：(Best 30 總和 + Recent 10 總和) / 40</div>
         </div>
 
         <!-- Add record -->
@@ -341,7 +329,7 @@
                                 <td>{{ rec.songName }}</td>
                                 <td><span class="badge-diff">{{ rec.difficulty }}</span></td>
                                 <td>{{ formatScore(rec.score) }}</td>
-                                <td style="font-weight:600;color:#b5e4ff;">{{ rec.ptt.toFixed(4) }}</td>
+                                <td style="font-weight:600;color:#b5e4ff;">{{ rec.rawPtt.toFixed(4) }}</td>
                                 <td><button class="delete-icon" @click="deleteRecord(rec.id)">🗑</button></td>
                             </tr>
                         </tbody>
@@ -357,12 +345,15 @@
                     <table v-else-if="recent30List.length">
                         <thead><tr><th>時間</th><th>歌曲</th><th>難度</th><th>分數</th><th>PTT</th><th></th></tr></thead>
                         <tbody>
-                            <tr v-for="rec in recent30List" :key="rec.id">
-                                <td style="white-space:nowrap;">{{ formatTime(rec.timestamp) }}</td>
+                            <tr v-for="rec in recent30List" :key="rec.id" :style="rec.isInTop10 ? 'background:rgba(76,110,255,0.08);' : ''">
+                                <td style="white-space:nowrap;">
+                                    <span v-if="rec.isInTop10" title="Top 10" style="color:#4c6eff;margin-right:4px;">★</span>
+                                    {{ formatTime(rec.timestamp) }}
+                                </td>
                                 <td>{{ rec.songName }}</td>
                                 <td><span class="badge-diff">{{ rec.difficulty }}</span></td>
                                 <td>{{ formatScore(rec.score) }}</td>
-                                <td>{{ rec.ptt.toFixed(4) }}</td>
+                                <td :style="rec.isInTop10 ? 'font-weight:600;color:#b5e4ff;' : ''">{{ rec.rawPtt.toFixed(4) }}</td>
                                 <td><button class="delete-icon" @click="deleteRecord(rec.id)">🗑</button></td>
                             </tr>
                         </tbody>
@@ -387,7 +378,7 @@
                             <td>{{ rec.songName }}</td>
                             <td>{{ rec.difficulty }} ({{ rec.constant.toFixed(2) }})</td>
                             <td>{{ formatScore(rec.score) }}</td>
-                            <td>{{ rec.ptt.toFixed(4) }}</td>
+                            <td>{{ computePtt(rec.constant, rec.score).toFixed(4) }}</td>
                             <td>{{ formatTime(rec.timestamp) }}</td>
                             <td><button class="delete-icon" @click="deleteRecord(rec.id)">🗑</button></td>
                         </tr>
@@ -464,9 +455,16 @@ const songsDB = [
 
 // ── PTT formula ────────────────────────────────────────────────────────────
 function computePtt(constant, score) {
-    if (score >= 10000000) return constant + 2.0;
-    if (score >= 9800000) return constant + 1.0 + (score - 9800000) / 200000;
-    return constant + (score - 9500000) / 300000;
+    let factor = 0;
+    if (score >= 10000000) {
+        factor = 2.0;
+    } else if (score >= 9800000) {
+        factor = 1.0 + (score - 9800000) / 200000;
+    } else {
+        factor = (score - 9500000) / 300000;
+    }
+    // Individual play rating = CC + Factor, floor at 0.0
+    return Math.max(0, constant + factor);
 }
 
 // ── Song utilities ─────────────────────────────────────────────────────────
@@ -799,16 +797,58 @@ createApp({
 
         const allRecords    = computed(() => records.value);
         const totalRecords  = computed(() => records.value.length);
-        const best30List    = computed(() => [...records.value].sort((a,b) => b.ptt - a.ptt).slice(0,30));
-        const recent30List  = computed(() => [...records.value].sort((a,b) => b.timestamp - a.timestamp).slice(0,30));
+        
+        // Helper to get play rating for a record (re-calculated to ensure correctness)
+        const getRating = r => computePtt(r.constant, r.score);
+
+        // Best 30: 最高 PTT 的 30 個不重複譜面
+        const best30List = computed(() => {
+            const chartMap = new Map();
+            // Sort by timestamp to ensure map keeps the highest PTT, and for tie-breaks, newer plays
+            const sortedByTime = [...records.value].sort((a,b) => a.timestamp - b.timestamp);
+            for (const r of sortedByTime) {
+                const ptt = getRating(r);
+                const key = `${r.songName}||${r.difficulty}`;
+                if (!chartMap.has(key) || chartMap.get(key).rawPtt <= ptt) {
+                    chartMap.set(key, { ...r, rawPtt: ptt });
+                }
+            }
+            return Array.from(chartMap.values())
+                .sort((a,b) => b.rawPtt - a.rawPtt)
+                .slice(0, 30);
+        });
+
+        // Recent 30: 最近遊玩的 30 筆
+        const recent30Raw = computed(() => [...records.value].sort((a,b) => b.timestamp - a.timestamp).slice(0, 30));
+        
+        // Recent 30 List with metadata for UI
+        const recent30List = computed(() => {
+            const last30 = recent30Raw.value.map(r => ({ ...r, rawPtt: getRating(r) }));
+            // Find top 10 within these 30
+            const sortedByPtt = [...last30].sort((a, b) => b.rawPtt - a.rawPtt);
+            const top10Ids = new Set(sortedByPtt.slice(0, 10).map(r => r.id));
+            return last30.map(r => ({ ...r, isInTop10: top10Ids.has(r.id) }));
+        });
+
+        // PTT 計算用的 Recent 10
+        const recent10List = computed(() => {
+            const last30WithPtt = recent30Raw.value.map(r => getRating(r));
+            return last30WithPtt.sort((a, b) => b - a).slice(0, 10);
+        });
+
+        const best30Sum     = computed(() => best30List.value.reduce((s, r) => s + r.rawPtt, 0));
         const best30Count   = computed(() => best30List.value.length);
         const recent30Count = computed(() => recent30List.value.length);
-        const bestAvg       = computed(() => best30Count.value ? best30List.value.reduce((s,r) => s+r.ptt,0)/best30Count.value : 0);
-        const recentAvg     = computed(() => recent30Count.value ? recent30List.value.reduce((s,r) => s+r.ptt,0)/recent30Count.value : 0);
+        const recent10Count = computed(() => recent10List.value.length);
+
+        const recent10Sum   = computed(() => recent10List.value.reduce((s, p) => s + p, 0));
+        
+        const bestAvg       = computed(() => best30Count.value ? best30Sum.value / best30Count.value : 0);
+        const recentAvg     = computed(() => recent10Count.value ? recent10Sum.value / recent10Count.value : 0);
+        
         const currentPtt    = computed(() => {
-            const sum = best30List.value.reduce((s,r)=>s+r.ptt,0) + recent30List.value.reduce((s,r)=>s+r.ptt,0);
-            const cnt = best30Count.value + recent30Count.value;
-            return cnt ? sum / cnt : 0;
+            // Official Formula: (Sum(B30) + Sum(R10)) / 40
+            return (best30Sum.value + recent10Sum.value) / 40;
         });
 
         const formatScore = score => (score / 10000).toFixed(2) + "w";
@@ -854,7 +894,7 @@ createApp({
             addRecord, deleteRecord, clearAllRecords,
             best30List, recent30List, allRecords, totalRecords,
             best30Count, recent30Count, bestAvg, recentAvg, currentPtt,
-            formatScore, formatTime,
+            formatScore, formatTime, computePtt,
         };
     }
 }).mount('#app');
