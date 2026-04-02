@@ -600,7 +600,7 @@ createApp({
                     localStorage.setItem(TOKEN_KEY, data.token);
                     localStorage.setItem(USERNAME_KEY, data.username);
                     isLoggedIn.value = true;
-                    await loadSongsFromApi();
+                    await loadSongsLocal();
                     await loadRecordsFromApi();
                 } else {
                     authError.value = data.error || "操作失敗，請稍後再試";
