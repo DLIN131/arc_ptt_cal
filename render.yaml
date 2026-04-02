@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: arcaea-ptt-cal
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python server.py
+    healthCheckPath: /healthz
+    autoDeployTrigger: commit
