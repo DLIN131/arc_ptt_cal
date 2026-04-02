@@ -7,3 +7,8 @@ services:
     startCommand: python server.py
     healthCheckPath: /healthz
     autoDeployTrigger: commit
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false

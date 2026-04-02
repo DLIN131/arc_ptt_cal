@@ -1,1 +1,4 @@
-# This project currently uses Python standard library only.
+pymongo[srv]==4.7.3
+bcrypt==4.1.3
+PyJWT==2.9.0
+python-dotenv==1.0.1

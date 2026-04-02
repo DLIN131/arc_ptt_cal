@@ -1,31 +1,23 @@
-﻿<!DOCTYPE html>
-<html lang="zh-CN">
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Arcaea PTT 計算器 | 定數同步版</title>
-    <!-- Google Font & ?箇??瑕? -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background: linear-gradient(145deg, #0a0c15 0%, #0e111b 100%);
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             color: #eef2ff;
             padding: 24px 20px;
+            min-height: 100vh;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1400px; margin: 0 auto; }
 
-        /* ?∠??瑕? */
         .card {
             background: rgba(18, 22, 35, 0.75);
             backdrop-filter: blur(12px);
@@ -36,333 +28,321 @@
             transition: all 0.2s ease;
         }
 
-        .glass-panel {
-            background: rgba(12, 16, 28, 0.7);
-            backdrop-filter: blur(8px);
-            border-radius: 28px;
-            border: 1px solid rgba(80, 120, 255, 0.3);
-        }
-
         h1 {
-            font-size: 1.9rem;
-            font-weight: 700;
+            font-size: 1.9rem; font-weight: 700;
             background: linear-gradient(135deg, #E0E7FF, #8AABFF);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: -0.3px;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            letter-spacing: -0.3px; display: inline-flex; align-items: center; gap: 12px;
         }
-
         h2 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            letter-spacing: -0.2px;
-            border-left: 4px solid #5f7eff;
-            padding-left: 14px;
+            font-size: 1.4rem; font-weight: 600; margin-bottom: 16px;
+            letter-spacing: -0.2px; border-left: 4px solid #5f7eff; padding-left: 14px;
         }
-
-        h3 {
-            font-size: 1rem;
-            font-weight: 500;
-            color: #b9c7ff;
-            margin-bottom: 12px;
-        }
+        h3 { font-size: 1rem; font-weight: 500; color: #b9c7ff; margin-bottom: 12px; }
 
         .ptt-main {
             background: linear-gradient(125deg, #101624, #080c18);
-            border-radius: 48px;
-            padding: 20px 28px;
-            text-align: center;
+            border-radius: 48px; padding: 20px 28px; text-align: center;
             border: 1px solid rgba(95, 126, 255, 0.5);
             box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.4);
         }
-
         .ptt-number {
-            font-size: 4.2rem;
-            font-weight: 800;
-            letter-spacing: 2px;
+            font-size: 4.2rem; font-weight: 800; letter-spacing: 2px;
             background: linear-gradient(135deg, #ffffff, #b3c7ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            -webkit-background-clip: text; background-clip: text; color: transparent;
             line-height: 1;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-
         .ptt-label {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            font-weight: 500;
-            color: #8f9eff;
-            margin-top: 6px;
+            font-size: 0.85rem; text-transform: uppercase;
+            font-weight: 500; color: #8f9eff; margin-top: 6px;
         }
 
-        .stat-grid {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 16px;
-            flex-wrap: wrap;
-        }
-
+        .stat-grid { display: flex; gap: 20px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
         .stat-badge {
-            background: #0f1322;
-            border-radius: 60px;
-            padding: 8px 20px;
-            text-align: center;
-            border: 1px solid #2a2f44;
+            background: #0f1322; border-radius: 60px; padding: 8px 20px;
+            text-align: center; border: 1px solid #2a2f44;
         }
+        .stat-value { font-weight: 700; font-size: 1.4rem; color: #d6e3ff; }
 
-        .stat-value {
-            font-weight: 700;
-            font-size: 1.4rem;
-            color: #d6e3ff;
+        .form-group { margin-bottom: 20px; }
+        label { font-weight: 500; font-size: 0.85rem; color: #b1c0ff; display: block; margin-bottom: 8px; }
+
+        select, input[type="text"], input[type="number"], input[type="password"] {
+            width: 100%; background: #0a0e1c; border: 1px solid #2a2f4e;
+            border-radius: 24px; padding: 12px 18px; font-size: 0.95rem;
+            color: #f0f3ff; font-family: inherit; transition: all 0.2s; outline: none;
         }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            font-weight: 500;
-            font-size: 0.85rem;
-            color: #b1c0ff;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        select, input {
-            width: 100%;
-            background: #0a0e1c;
-            border: 1px solid #2a2f4e;
-            border-radius: 24px;
-            padding: 12px 18px;
-            font-size: 0.95rem;
-            color: #f0f3ff;
-            font-family: inherit;
-            transition: all 0.2s;
-            outline: none;
-        }
-
         select:focus, input:focus {
-            border-color: #5f7eff;
-            box-shadow: 0 0 0 2px rgba(95, 126, 255, 0.3);
+            border-color: #5f7eff; box-shadow: 0 0 0 2px rgba(95, 126, 255, 0.3);
         }
 
         button {
-            background: #2a3a7a;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: white;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: inherit;
+            background: #2a3a7a; border: none; padding: 12px 24px; border-radius: 40px;
+            font-weight: 600; font-size: 0.9rem; color: white; cursor: pointer;
+            transition: all 0.2s ease; font-family: inherit;
             box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
-
         button.primary {
             background: linear-gradient(105deg, #4c6eff, #3a55cc);
             box-shadow: 0 6px 14px rgba(76, 110, 255, 0.25);
         }
-
-        button.primary:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.05);
+        button.primary:hover { transform: translateY(-2px); filter: brightness(1.05); }
+        button.primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        button.danger { background: #3a2a3a; color: #ffb4a2; border: 1px solid #8b5a5a; }
+        button.danger:hover { background: #5e3a4a; }
+        button.ghost {
+            background: transparent; border: 1px solid rgba(88,130,255,0.3);
+            color: #8f9eff; padding: 7px 16px; font-size: 0.82rem;
         }
+        button.ghost:hover { background: rgba(88,130,255,0.1); }
 
-        button.danger {
-            background: #3a2a3a;
-            color: #ffb4a2;
-            border: 1px solid #8b5a5a;
-        }
+        .record-table { overflow-x: auto; border-radius: 24px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid #242842; }
+        th { color: #9faeff; font-weight: 600; }
+        .badge-diff { background: #1e243f; border-radius: 24px; padding: 4px 12px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
+        .delete-icon { background: none; border: none; color: #ff8a7a; cursor: pointer; font-size: 1.1rem; padding: 4px 8px; box-shadow: none; }
 
-        button.danger:hover {
-            background: #5e3a4a;
-        }
-
-        .record-table {
-            overflow-x: auto;
-            border-radius: 24px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.8rem;
-        }
-
-        th, td {
-            padding: 12px 10px;
-            text-align: left;
-            border-bottom: 1px solid #242842;
-        }
-
-        th {
-            color: #9faeff;
-            font-weight: 600;
-        }
-
-        .badge-diff {
-            background: #1e243f;
-            border-radius: 24px;
-            padding: 4px 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            display: inline-block;
-        }
-
-        .delete-icon {
-            background: none;
-            border: none;
-            color: #ff8a7a;
-            cursor: pointer;
-            font-size: 1.2rem;
-            padding: 4px 8px;
-            box-shadow: none;
-        }
-
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .search-box {
-            margin-bottom: 16px;
-        }
-
-        .empty-msg {
-            text-align: center;
-            padding: 32px;
-            color: #7f8bb3;
-        }
-
-        .grid-2col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .search-box { margin-bottom: 16px; }
+        .empty-msg { text-align: center; padding: 32px; color: #7f8bb3; }
+        .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .scroll-list { max-height: 380px; overflow-y: auto; }
+        .song-select-hint { font-size: 0.7rem; margin-top: 6px; color: #6c7bb5; }
 
         @media (max-width: 780px) {
-            .grid-2col {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            body {
-                padding: 16px;
-            }
-            .ptt-number {
-                font-size: 3rem;
-            }
+            .grid-2col { grid-template-columns: 1fr; gap: 20px; }
+            body { padding: 16px; }
+            .ptt-number { font-size: 3rem; }
+        }
+        footer { text-align: center; font-size: 0.7rem; margin-top: 32px; color: #555b82; }
+
+        /* ── Auth overlay ── */
+        .auth-overlay {
+            position: fixed; inset: 0;
+            background: linear-gradient(145deg, rgba(4,6,14,0.98), rgba(8,10,22,0.98));
+            backdrop-filter: blur(24px);
+            display: flex; align-items: center; justify-content: center; z-index: 9999;
+        }
+        .auth-modal {
+            width: min(430px, 94vw);
+            animation: modalIn 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: translateY(28px) scale(0.94); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .auth-logo { text-align: center; margin-bottom: 28px; }
+        .auth-logo-icon { font-size: 2.6rem; display: block; margin-bottom: 10px; }
+        .auth-logo h1 { justify-content: center; font-size: 1.6rem; }
+        .auth-logo p { color: #6c7bb5; font-size: 0.85rem; margin-top: 6px; }
+
+        .auth-tabs {
+            display: flex; gap: 6px; background: #060911;
+            border-radius: 24px; padding: 5px; margin-bottom: 26px;
+        }
+        .auth-tab-btn {
+            flex: 1; padding: 10px; border-radius: 18px; border: none;
+            background: transparent; color: #5a6690; font-weight: 600;
+            font-size: 0.9rem; cursor: pointer; transition: all 0.22s; box-shadow: none;
+        }
+        .auth-tab-btn.active {
+            background: linear-gradient(105deg, #4c6eff, #3a55cc);
+            color: white; box-shadow: 0 4px 12px rgba(76, 110, 255, 0.35);
         }
 
-        footer {
-            text-align: center;
-            font-size: 0.7rem;
-            margin-top: 32px;
-            color: #555b82;
+        .auth-error {
+            background: rgba(255, 80, 80, 0.1); border: 1px solid rgba(255, 80, 80, 0.3);
+            border-radius: 16px; padding: 10px 16px; color: #ff9090;
+            font-size: 0.83rem; margin-bottom: 14px;
         }
-        .scroll-list {
-            max-height: 380px;
-            overflow-y: auto;
+
+        .password-wrap { position: relative; }
+        .password-wrap input { padding-right: 48px; }
+        .pw-toggle {
+            position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; color: #5a6690; cursor: pointer;
+            padding: 4px; box-shadow: none; font-size: 1.1rem; line-height: 1;
         }
-        .song-select-hint {
-            font-size: 0.7rem;
-            margin-top: 6px;
-            color: #6c7bb5;
+
+        /* ── Loading spinner ── */
+        .spinner-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+        .spinner {
+            width: 44px; height: 44px; border-radius: 50%;
+            border: 3px solid rgba(88,130,255,0.15);
+            border-top-color: #5f7eff;
+            animation: spin 0.8s linear infinite;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Toast ── */
+        .toast-wrap {
+            position: fixed; bottom: 24px; right: 24px;
+            display: flex; flex-direction: column; gap: 10px; z-index: 10000;
+            pointer-events: none;
+        }
+        .toast {
+            padding: 12px 20px; border-radius: 16px; font-size: 0.88rem;
+            font-weight: 500; max-width: 300px;
+            animation: toastIn 0.3s ease;
+            backdrop-filter: blur(12px);
+        }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        .toast.success { background: rgba(34,197,94,0.18); border: 1px solid rgba(34,197,94,0.35); color: #86efac; }
+        .toast.error   { background: rgba(239,68,68,0.18);  border: 1px solid rgba(239,68,68,0.35);  color: #fca5a5; }
+        .toast.warning { background: rgba(234,179,8,0.15);  border: 1px solid rgba(234,179,8,0.3);   color: #fde68a; }
+
+        /* ── User badge in header ── */
+        .user-badge {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(18,22,35,0.8); border: 1px solid rgba(88,130,255,0.2);
+            border-radius: 40px; padding: 6px 14px; font-size: 0.85rem;
+        }
+        .user-badge span { color: #9faeff; }
+        .user-badge strong { color: #c8d8ff; }
+
+        .loading-records { text-align: center; padding: 24px; color: #5a6690; font-size: 0.88rem; }
     </style>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
 <div id="app">
-    <div class="container">
-        <div class="flex-between" style="margin-bottom: 24px;">
-            <h1>Arcaea PTT 計算器 <span style="font-size: 0.8rem; background: #1e2440; padding: 4px 12px; border-radius: 40px;">定數資料 2026-04-02</span></h1>
-            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: flex-end;">
-                <button
-                    @click="syncSongsDbFromWiki"
-                    :disabled="isSyncingSongs"
-                    class="primary"
-                    style="padding: 8px 14px; font-size: 12px;"
-                >
-                    {{ isSyncingSongs ? '同步中...' : '同步定數' }}
+
+    <!-- ── Loading screen ── -->
+    <div v-if="isInitializing" class="auth-overlay">
+        <div class="spinner-wrap">
+            <div class="spinner"></div>
+            <p style="color:#5a6690;font-size:0.88rem;">載入中...</p>
+        </div>
+    </div>
+
+    <!-- ── Auth modal ── -->
+    <div v-else-if="!isLoggedIn" class="auth-overlay">
+        <div class="auth-modal card">
+            <div class="auth-logo">
+                <span class="auth-logo-icon">🎵</span>
+                <h1>Arcaea PTT</h1>
+                <p>登入以同步雲端成績</p>
+            </div>
+
+            <div class="auth-tabs">
+                <button class="auth-tab-btn" :class="{active: authTab==='login'}"    @click="authTab='login';authError=''">登入</button>
+                <button class="auth-tab-btn" :class="{active: authTab==='register'}" @click="authTab='register';authError=''">註冊</button>
+            </div>
+
+            <div class="form-group">
+                <label>使用者名稱</label>
+                <input id="auth-username" type="text" v-model="authUsername" @keyup.enter="submitAuth" placeholder="輸入使用者名稱" autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label>密碼</label>
+                <div class="password-wrap">
+                    <input id="auth-password" :type="showPw ? 'text' : 'password'" v-model="authPassword" @keyup.enter="submitAuth" placeholder="輸入密碼" autocomplete="current-password">
+                    <button class="pw-toggle" @click="showPw=!showPw" type="button">{{ showPw ? '🙈' : '👁' }}</button>
+                </div>
+            </div>
+            <div v-if="authTab==='register'" class="form-group">
+                <label>確認密碼</label>
+                <div class="password-wrap">
+                    <input id="auth-confirm" :type="showPw ? 'text' : 'password'" v-model="authConfirm" @keyup.enter="submitAuth" placeholder="再次輸入密碼">
+                </div>
+            </div>
+
+            <div v-if="authError" class="auth-error">{{ authError }}</div>
+
+            <button id="auth-submit" class="primary" style="width:100%;padding:13px;" @click="submitAuth" :disabled="authLoading">
+                {{ authLoading ? (authTab==='login' ? '登入中...' : '註冊中...') : (authTab==='login' ? '登入' : '建立帳號') }}
+            </button>
+        </div>
+    </div>
+
+    <!-- ── Main App ── -->
+    <div v-else class="container">
+        <!-- Header -->
+        <div class="flex-between" style="margin-bottom:24px;">
+            <h1>Arcaea PTT 計算器 <span style="font-size:0.8rem;background:#1e2440;padding:4px 12px;border-radius:40px;">定數資料</span></h1>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
+                <button id="sync-btn" @click="syncSongs" :disabled="isSyncingSongs" class="primary" style="padding:8px 14px;font-size:12px;">
+                    {{ isSyncingSongs ? '同步中...' : '從 Wiki 同步' }}
                 </button>
-                <button @click="clearAllRecords" class="danger" style="background: #2f2333;">清空紀錄</button>
+                <div class="user-badge">
+                    <span>👤</span>
+                    <strong>{{ currentUsername }}</strong>
+                    <button class="ghost" style="padding:4px 10px;font-size:0.75rem;margin-left:4px;" @click="logout">登出</button>
+                </div>
             </div>
         </div>
 
-        <div v-if="syncStatus" style="margin: -14px 0 18px; color: #9fb3ff; font-size: 12px; text-align: right;">
-            {{ syncStatus }}
-        </div>
+        <div v-if="syncStatus" style="margin:-14px 0 18px;color:#9fb3ff;font-size:12px;text-align:right;">{{ syncStatus }}</div>
 
-        <div class="card ptt-main" style="margin-bottom: 28px;">
+        <!-- PTT display -->
+        <div class="card ptt-main" style="margin-bottom:28px;">
             <div class="ptt-number">{{ currentPtt.toFixed(4) }}</div>
             <div class="ptt-label">目前 Potential</div>
             <div class="stat-grid">
-                <div class="stat-badge"><div class="stat-value">{{ best30Count }}/30</div><div style="font-size: 12px;">Best30 平均</div><div style="font-weight: 600;">{{ bestAvg.toFixed(3) }}</div></div>
-                <div class="stat-badge"><div class="stat-value">{{ recent30Count }}/30</div><div style="font-size: 12px;">Recent30 平均</div><div style="font-weight: 600;">{{ recentAvg.toFixed(3) }}</div></div>
-                <div class="stat-badge"><div class="stat-value">{{ totalRecords }}</div><div style="font-size: 12px;">總紀錄數</div></div>
-            </div>
-            <div class="ptt-label" style="margin-top: 8px;">PTT = (Best30 + Recent30) / (Best30 數量 + Recent30 數量)</div>
-        </div>
-
-        <div class="card" style="margin-bottom: 32px;">
-            <h2>新增成績</h2>
-            <div class="grid-2col" style="grid-template-columns: 2fr 1fr 0.5fr; gap: 16px;">
-                <div style="grid-column: span 3; display: flex; flex-wrap: wrap; gap: 12px;">
-                    <div style="flex: 2;">
-                        <label>歌曲 / 譜面</label>
-                        <select v-model.number="selectedChartId">
-                            <option v-for="chart in filteredSongOptions" :key="chart.id" :value="chart.id">
-                                {{ chart.display }} [定數 {{ chart.constant.toFixed(2) }}]
-                            </option>
-                        </select>
-                        <input type="text" v-model="searchSong" placeholder="搜尋歌曲 / 難度 / 定數" class="song-select-hint" style="margin-top: 8px; background:#070b16;">
-                    </div>
-                    <div style="flex: 1;">
-                        <label>分數 (0 ~ 10,100,000)</label>
-                        <input type="number" v-model.number="scoreInput" placeholder="例如：9985000" step="1000">
-                    </div>
-                    <div style="flex: 0.3; display: flex; align-items: flex-end;">
-                        <button @click="addRecord" class="primary" style="width: 100%;">新增</button>
-                    </div>
+                <div class="stat-badge">
+                    <div class="stat-value">{{ best30Count }}/30</div>
+                    <div style="font-size:12px;">Best30 平均</div>
+                    <div style="font-weight:600;">{{ bestAvg.toFixed(3) }}</div>
+                </div>
+                <div class="stat-badge">
+                    <div class="stat-value">{{ recent30Count }}/30</div>
+                    <div style="font-size:12px;">Recent30 平均</div>
+                    <div style="font-weight:600;">{{ recentAvg.toFixed(3) }}</div>
+                </div>
+                <div class="stat-badge">
+                    <div class="stat-value">{{ totalRecords }}</div>
+                    <div style="font-size:12px;">總紀錄數</div>
                 </div>
             </div>
-            <div v-if="selectedChart" style="margin-top: 12px; background: #0e1222; border-radius: 20px; padding: 10px 16px;">
+            <div class="ptt-label" style="margin-top:8px;">PTT = (Best30 + Recent30) / (Best30 數量 + Recent30 數量)</div>
+        </div>
+
+        <!-- Add record -->
+        <div class="card" style="margin-bottom:32px;">
+            <h2>新增成績</h2>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;">
+                <div style="flex:2;">
+                    <label>歌曲 / 譜面</label>
+                    <select id="chart-select" v-model.number="selectedChartId">
+                        <option v-for="chart in filteredSongOptions" :key="chart.id" :value="chart.id">
+                            {{ chart.display }} [定數 {{ chart.constant.toFixed(2) }}]
+                        </option>
+                    </select>
+                    <input type="text" v-model="searchSong" placeholder="搜尋歌曲 / 難度 / 定數" class="song-select-hint" style="margin-top:8px;background:#070b16;">
+                </div>
+                <div style="flex:1;">
+                    <label>分數 (0 ~ 10,100,000)</label>
+                    <input id="score-input" type="number" v-model.number="scoreInput" placeholder="例如：9985000" step="1000">
+                </div>
+                <div style="flex:0.3;display:flex;align-items:flex-end;">
+                    <button id="add-record-btn" @click="addRecord" class="primary" style="width:100%;" :disabled="isSubmitting">
+                        {{ isSubmitting ? '儲存中...' : '新增' }}
+                    </button>
+                </div>
+            </div>
+            <div v-if="selectedChart" style="margin-top:12px;background:#0e1222;border-radius:20px;padding:10px 16px;">
                 <span>目前選擇：<strong>{{ selectedChart.songName }} [{{ selectedChart.difficulty }}]</strong>，定數 = {{ selectedChart.constant.toFixed(2) }}</span>
-                <span v-if="tempPreviewPtt !== null" style="margin-left: 20px; color:#b7e0ff;">預估 PTT：<strong>{{ tempPreviewPtt.toFixed(4) }}</strong></span>
+                <span v-if="tempPreviewPtt !== null" style="margin-left:20px;color:#b7e0ff;">預估 PTT：<strong>{{ tempPreviewPtt.toFixed(4) }}</strong></span>
             </div>
         </div>
 
+        <!-- Best30 & Recent30 -->
         <div class="grid-2col">
             <div class="card">
-                <div class="flex-between">
-                    <h2>Best 30 紀錄</h2>
-                    <span style="font-size: 12px;">依 PTT 高到低</span>
-                </div>
+                <div class="flex-between"><h2>Best 30 紀錄</h2><span style="font-size:12px;">依 PTT 高到低</span></div>
                 <div class="scroll-list">
-                    <table v-if="best30List.length">
-                        <thead>
-                            <tr><th>#</th><th>歌曲</th><th>難度</th><th>分數</th><th>PTT</th><th></th></tr>
-                        </thead>
+                    <div v-if="isLoadingRecords" class="loading-records">載入成績中...</div>
+                    <table v-else-if="best30List.length">
+                        <thead><tr><th>#</th><th>歌曲</th><th>難度</th><th>分數</th><th>PTT</th><th></th></tr></thead>
                         <tbody>
                             <tr v-for="(rec, idx) in best30List" :key="rec.id">
                                 <td>{{ idx + 1 }}</td>
                                 <td>{{ rec.songName }}</td>
                                 <td><span class="badge-diff">{{ rec.difficulty }}</span></td>
                                 <td>{{ formatScore(rec.score) }}</td>
-                                <td style="font-weight: 600; color:#b5e4ff;">{{ rec.ptt.toFixed(4) }}</td>
-                                <td><button class="delete-icon" @click="deleteRecord(rec.id)">刪除</button></td>
+                                <td style="font-weight:600;color:#b5e4ff;">{{ rec.ptt.toFixed(4) }}</td>
+                                <td><button class="delete-icon" @click="deleteRecord(rec.id)">🗑</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -371,21 +351,19 @@
             </div>
 
             <div class="card">
-                <div class="flex-between">
-                    <h2>Recent 30 紀錄</h2>
-                    <span style="font-size: 12px;">依時間新到舊</span>
-                </div>
+                <div class="flex-between"><h2>Recent 30 紀錄</h2><span style="font-size:12px;">依時間新到舊</span></div>
                 <div class="scroll-list">
-                    <table v-if="recent30List.length">
+                    <div v-if="isLoadingRecords" class="loading-records">載入成績中...</div>
+                    <table v-else-if="recent30List.length">
                         <thead><tr><th>時間</th><th>歌曲</th><th>難度</th><th>分數</th><th>PTT</th><th></th></tr></thead>
                         <tbody>
                             <tr v-for="rec in recent30List" :key="rec.id">
-                                <td style="white-space: nowrap;">{{ formatTime(rec.timestamp) }}</td>
+                                <td style="white-space:nowrap;">{{ formatTime(rec.timestamp) }}</td>
                                 <td>{{ rec.songName }}</td>
                                 <td><span class="badge-diff">{{ rec.difficulty }}</span></td>
                                 <td>{{ formatScore(rec.score) }}</td>
                                 <td>{{ rec.ptt.toFixed(4) }}</td>
-                                <td><button class="delete-icon" @click="deleteRecord(rec.id)">刪除</button></td>
+                                <td><button class="delete-icon" @click="deleteRecord(rec.id)">🗑</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -394,13 +372,15 @@
             </div>
         </div>
 
-        <div class="card" style="margin-top: 28px;">
+        <!-- All records -->
+        <div class="card" style="margin-top:28px;">
             <div class="flex-between">
                 <h2>全部遊玩紀錄 ({{ totalRecords }})</h2>
-                <button @click="clearAllRecords" class="danger" style="padding: 6px 18px;">清空全部</button>
+                <button id="clear-btn" @click="clearAllRecords" class="danger" style="padding:6px 18px;">清空全部</button>
             </div>
-            <div class="scroll-list" style="max-height: 280px;">
-                <table v-if="allRecords.length">
+            <div class="scroll-list" style="max-height:280px;">
+                <div v-if="isLoadingRecords" class="loading-records">載入成績中...</div>
+                <table v-else-if="allRecords.length">
                     <thead><tr><th>歌曲</th><th>難度 / 定數</th><th>分數</th><th>PTT</th><th>時間</th><th></th></tr></thead>
                     <tbody>
                         <tr v-for="rec in allRecords.slice().reverse()" :key="rec.id">
@@ -409,7 +389,7 @@
                             <td>{{ formatScore(rec.score) }}</td>
                             <td>{{ rec.ptt.toFixed(4) }}</td>
                             <td>{{ formatTime(rec.timestamp) }}</td>
-                            <td><button class="delete-icon" @click="deleteRecord(rec.id)">刪除</button></td>
+                            <td><button class="delete-icon" @click="deleteRecord(rec.id)">🗑</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -417,655 +397,467 @@
             </div>
         </div>
 
-        <footer>
+        <footer style="margin-top:32px;">
             Arcaea PTT 計算公式：PTT = 定數 + 分數區間加成（PM +2.0）。
         </footer>
+    </div>
+
+    <!-- ── Toast notifications ── -->
+    <div class="toast-wrap">
+        <div v-for="t in toasts" :key="t.id" :class="['toast', t.type]">{{ t.message }}</div>
     </div>
 </div>
 
 <script>
-    const { createApp, ref, computed, onMounted, watch } = Vue;
+const { createApp, ref, computed, onMounted, watch } = Vue;
 
-    // songs constants seed
-    const songsDB = [
-        { id: 1, songName: "Testify", difficulty: "PRS", constant: 9.4 },
-        { id: 2, songName: "Testify", difficulty: "FTR", constant: 10.9 },
-        { id: 3, songName: "Testify", difficulty: "BYD", constant: 12.0 },
+// ── Constants ──────────────────────────────────────────────────────────────
+const TOKEN_KEY    = "arcaea_ptt_token";
+const USERNAME_KEY = "arcaea_ptt_username";
+const SONGS_DB_KEY      = "arcaea_songs_db_v2";
+const SONGS_DB_META_KEY = "arcaea_songs_db_meta_v2";
+const DIFF_ORDER = ["PST","PRS","FTR","BYD","ETR"];
 
-        { id: 4, songName: "Pentiment", difficulty: "PRS", constant: 8.7 },
-        { id: 5, songName: "Pentiment", difficulty: "FTR", constant: 10.4 },
-        { id: 6, songName: "Pentiment", difficulty: "BYD", constant: 11.5 },
+// ── Seed song data ─────────────────────────────────────────────────────────
+const songsDB = [
+    { id:1,  songName:"Testify",          difficulty:"PRS", constant:9.4  },
+    { id:2,  songName:"Testify",          difficulty:"FTR", constant:10.9 },
+    { id:3,  songName:"Testify",          difficulty:"BYD", constant:12.0 },
+    { id:4,  songName:"Pentiment",        difficulty:"PRS", constant:8.7  },
+    { id:5,  songName:"Pentiment",        difficulty:"FTR", constant:10.4 },
+    { id:6,  songName:"Pentiment",        difficulty:"BYD", constant:11.5 },
+    { id:7,  songName:"Arcana Eden",      difficulty:"PRS", constant:8.7  },
+    { id:8,  songName:"Arcana Eden",      difficulty:"FTR", constant:10.5 },
+    { id:9,  songName:"Arcana Eden",      difficulty:"BYD", constant:11.6 },
+    { id:10, songName:"Grievous Lady",    difficulty:"PRS", constant:9.3  },
+    { id:11, songName:"Grievous Lady",    difficulty:"FTR", constant:11.1 },
+    { id:12, songName:"Tempestissimo",    difficulty:"PRS", constant:9.5  },
+    { id:13, songName:"Tempestissimo",    difficulty:"FTR", constant:10.7 },
+    { id:14, songName:"Tempestissimo",    difficulty:"BYD", constant:11.7 },
+    { id:15, songName:"Fracture Ray",     difficulty:"PRS", constant:9.5  },
+    { id:16, songName:"Fracture Ray",     difficulty:"FTR", constant:11.1 },
+    { id:17, songName:"Aegleseeker",      difficulty:"PRS", constant:9.1  },
+    { id:18, songName:"Aegleseeker",      difficulty:"FTR", constant:11.2 },
+    { id:19, songName:"Sheriruth (Laur Remix)", difficulty:"FTR", constant:10.5 },
+    { id:20, songName:"SAIKYO STRONGER",  difficulty:"PRS", constant:9.4  },
+    { id:21, songName:"SAIKYO STRONGER",  difficulty:"FTR", constant:11.0 },
+    { id:22, songName:"Cyaegha",          difficulty:"PRS", constant:8.4  },
+    { id:23, songName:"Cyaegha",          difficulty:"FTR", constant:10.7 },
+    { id:24, songName:"Axium Crisis",     difficulty:"PRS", constant:8.5  },
+    { id:25, songName:"Axium Crisis",     difficulty:"FTR", constant:10.6 },
+    { id:26, songName:"World Ender",      difficulty:"FTR", constant:11.1 },
+    { id:27, songName:"Dantalion",        difficulty:"FTR", constant:10.8 },
+    { id:28, songName:"#1f1e33",          difficulty:"FTR", constant:11.1 },
+    { id:29, songName:"Singularity",      difficulty:"FTR", constant:10.5 },
+    { id:30, songName:"Singularity",      difficulty:"BYD", constant:10.4 },
+    { id:31, songName:"Abstruse Dilemma", difficulty:"FTR", constant:11.3 },
+    { id:32, songName:"Infinite Strife,", difficulty:"FTR", constant:10.9 },
+    { id:33, songName:"Heavensdoor",      difficulty:"FTR", constant:10.8 },
+    { id:34, songName:"Vicious [ANTi] Heroism", difficulty:"FTR", constant:10.0 },
+    { id:35, songName:"Vicious [ANTi] Heroism", difficulty:"BYD", constant:11.2 },
+    { id:36, songName:"TEmPTaTiON",       difficulty:"FTR", constant:10.9 },
+    { id:37, songName:"PUPA",             difficulty:"FTR", constant:10.4 },
+    { id:38, songName:"Ringed Genesis",   difficulty:"FTR", constant:10.8 },
+    { id:39, songName:"Infinity Heaven",  difficulty:"BYD", constant:9.6  },
+    { id:40, songName:"ALTALE",           difficulty:"FTR", constant:10.0 },
+];
 
-        { id: 7, songName: "Arcana Eden", difficulty: "PRS", constant: 8.7 },
-        { id: 8, songName: "Arcana Eden", difficulty: "FTR", constant: 10.5 },
-        { id: 9, songName: "Arcana Eden", difficulty: "BYD", constant: 11.6 },
+// ── PTT formula ────────────────────────────────────────────────────────────
+function computePtt(constant, score) {
+    if (score >= 10000000) return constant + 2.0;
+    if (score >= 9800000) return constant + 1.0 + (score - 9800000) / 200000;
+    return constant + (score - 9500000) / 300000;
+}
 
-        { id: 10, songName: "Grievous Lady", difficulty: "PRS", constant: 9.3 },
-        { id: 11, songName: "Grievous Lady", difficulty: "FTR", constant: 11.1 },
-
-        { id: 12, songName: "Tempestissimo", difficulty: "PRS", constant: 9.5 },
-        { id: 13, songName: "Tempestissimo", difficulty: "FTR", constant: 10.7 },
-        { id: 14, songName: "Tempestissimo", difficulty: "BYD", constant: 11.7 },
-
-        { id: 15, songName: "Fracture Ray", difficulty: "PRS", constant: 9.5 },
-        { id: 16, songName: "Fracture Ray", difficulty: "FTR", constant: 11.1 },
-
-        { id: 17, songName: "Aegleseeker", difficulty: "PRS", constant: 9.1 },
-        { id: 18, songName: "Aegleseeker", difficulty: "FTR", constant: 11.2 },
-
-        { id: 19, songName: "Sheriruth (Laur Remix)", difficulty: "FTR", constant: 10.5 },
-        { id: 20, songName: "SAIKYO STRONGER", aliases: ["Saikyo Stronger"], difficulty: "PRS", constant: 9.4 },
-        { id: 21, songName: "SAIKYO STRONGER", aliases: ["Saikyo Stronger"], difficulty: "FTR", constant: 11.0 },
-
-        { id: 22, songName: "Cyaegha", difficulty: "PRS", constant: 8.4 },
-        { id: 23, songName: "Cyaegha", difficulty: "FTR", constant: 10.7 },
-        { id: 24, songName: "Axium Crisis", difficulty: "PRS", constant: 8.5 },
-        { id: 25, songName: "Axium Crisis", difficulty: "FTR", constant: 10.6 },
-
-        { id: 26, songName: "World Ender", difficulty: "FTR", constant: 11.1 },
-        { id: 27, songName: "Misdeed -la bonte de Dieu et l'origine du mal-", aliases: ["Misdeed -la bonte de Dieu et l'origine du mal-"], difficulty: "FTR", constant: 10.9 },
-        { id: 28, songName: "Last | Eternity", difficulty: "BYD", constant: 9.7 },
-        { id: 29, songName: "Last | Moment", difficulty: "FTR", constant: 9.0 },
-        { id: 30, songName: "Dantalion", difficulty: "FTR", constant: 10.8 },
-        { id: 31, songName: "#1f1e33", difficulty: "FTR", constant: 11.1 },
-
-        { id: 32, songName: "Singularity", difficulty: "FTR", constant: 10.5 },
-        { id: 33, songName: "Singularity", difficulty: "BYD", constant: 10.4 },
-        { id: 34, songName: "Ether Strike", difficulty: "FTR", constant: 10.3 },
-        { id: 35, songName: "GLORY : ROAD", aliases: ["GLORY ROAD", "GLORY ROAD ALT", "GLORY:ROAD"], difficulty: "FTR", constant: 10.5 },
-        { id: 36, songName: "BLRINK", difficulty: "FTR", constant: 9.7 },
-        { id: 37, songName: "Heavensdoor", difficulty: "FTR", constant: 10.8 },
-        { id: 38, songName: "Ringed Genesis", difficulty: "FTR", constant: 10.8 },
-        { id: 39, songName: "Vindication", difficulty: "FTR", constant: 9.6 },
-        { id: 40, songName: "Loschen", aliases: ["Loschen"], difficulty: "FTR", constant: 10.2 },
-        { id: 41, songName: "Red and Blue and Green", difficulty: "BYD", constant: 10.2 },
-        { id: 42, songName: "Nirv lucE", difficulty: "FTR", constant: 10.2 },
-        { id: 43, songName: "Bookmaker (2D Version)", difficulty: "FTR", constant: 10.0 },
-        { id: 44, songName: "goodtek", difficulty: "FTR", constant: 9.3 },
-        { id: 45, songName: "Ivy Swing", difficulty: "FTR", constant: 9.7 },
-
-        { id: 46, songName: "Infinity Heaven", difficulty: "PRS", constant: 5.5 },
-        { id: 47, songName: "Infinity Heaven", difficulty: "FTR", constant: 7.8 },
-        { id: 48, songName: "Infinity Heaven", difficulty: "BYD", constant: 9.6 },
-        { id: 49, songName: "Sayonara Hatsukoi", difficulty: "PRS", constant: 4.5 },
-        { id: 50, songName: "Sayonara Hatsukoi", difficulty: "FTR", constant: 7.0 },
-
-        { id: 51, songName: "Loveless Dress", difficulty: "FTR", constant: 9.7 },
-        { id: 52, songName: "PUPA", difficulty: "FTR", constant: 10.4 },
-        { id: 53, songName: "Infinite Strife,", difficulty: "FTR", constant: 10.9 },
-        { id: 54, songName: "Abstruse Dilemma", difficulty: "FTR", constant: 11.3 },
-        { id: 55, songName: "Crystal Gravity", difficulty: "FTR", constant: 9.4 },
-        { id: 56, songName: "Mazy Metroplex", aliases: ["Mazy Metro"], difficulty: "FTR", constant: 9.8 },
-        { id: 57, songName: "TEmPTaTiON", difficulty: "FTR", constant: 10.9 },
-        { id: 58, songName: "Sulfur", difficulty: "FTR", constant: 9.7 },
-        { id: 59, songName: "Genesis", difficulty: "FTR", constant: 8.2 },
-        { id: 60, songName: "Lost Civilization", difficulty: "FTR", constant: 9.2 },
-
-        { id: 61, songName: "Vicious [ANTi] Heroism", aliases: ["Vicious Heroism"], difficulty: "FTR", constant: 10.0 },
-        { id: 62, songName: "Vicious [ANTi] Heroism", aliases: ["Vicious Heroism"], difficulty: "BYD", constant: 11.2 },
-        { id: 63, songName: "Empire of Winter", difficulty: "FTR", constant: 9.1 },
-        { id: 64, songName: "ALTALE", difficulty: "FTR", constant: 10.0 },
-        { id: 65, songName: "Raven's Pride", difficulty: "FTR", constant: 9.5 },
-        { id: 66, songName: "LunarOrbit -believe in the Espebranch road-", aliases: ["LunarOrbit"], difficulty: "FTR", constant: 9.6 },
-        { id: 67, songName: "Fairytale", difficulty: "FTR", constant: 7.0 },
-        { id: 68, songName: "Fairytale", difficulty: "BYD", constant: 9.5 }
-    ];
-    
-    // PTT calculation helper
-    function computePtt(constant, score) {
-        if (score >= 10000000) return constant + 2.0;
-        if (score >= 9800000) return constant + 1.0 + (score - 9800000) / 200000;
-        if (score >= 9500000) return constant + (score - 9500000) / 300000;
-        // score below 9,500,000
-        return constant + (score - 9500000) / 300000;
+// ── Song utilities ─────────────────────────────────────────────────────────
+function normalizeText(input) {
+    return String(input || "").normalize("NFKD")
+        .replace(/[\u0300-\u036f]/g, "").toLowerCase()
+        .replace(/[^a-z0-9]+/g, " ").trim();
+}
+function normalizeDifficulty(token) {
+    const t = normalizeText(token);
+    if (!t) return null;
+    if (/\b(pst|past|0)\b/.test(t))   return "PST";
+    if (/\b(prs|present|1)\b/.test(t)) return "PRS";
+    if (/\b(ftr|future|2)\b/.test(t))  return "FTR";
+    if (/\b(byd|beyond|3)\b/.test(t))  return "BYD";
+    if (/\b(etr|eternal|4)\b/.test(t)) return "ETR";
+    return null;
+}
+function cleanSongName(text) {
+    return String(text || "").replace(/\[[^\]]*\]/g, "").replace(/\s+/g, " ").trim();
+}
+function parseConstantValue(text) {
+    const raw = String(text || "").replace(/,/g, "");
+    const match = raw.match(/\d+(?:\.\d+)?/);
+    if (!match) return null;
+    const num = Number(match[0]);
+    if (!Number.isFinite(num) || num < 0 || num > 13) return null;
+    return Number(num.toFixed(2));
+}
+function dedupeAndNormalizeCharts(rawCharts) {
+    const map = new Map();
+    for (const row of rawCharts || []) {
+        const songName = cleanSongName(row.songName);
+        const difficulty = normalizeDifficulty(row.difficulty);
+        const constant = parseConstantValue(row.constant);
+        if (!songName || !difficulty || constant === null) continue;
+        map.set(`${normalizeText(songName)}|${difficulty}`, { songName, difficulty, constant });
     }
+    let id = 1;
+    return [...map.values()]
+        .sort((a, b) => a.songName.localeCompare(b.songName) || a.difficulty.localeCompare(b.difficulty))
+        .map(row => ({ ...row, id: id++ }));
+}
+function decorateCharts(rawCharts) {
+    return rawCharts.map(ch => ({
+        ...ch,
+        display: `${ch.songName} [${ch.difficulty}]`,
+        searchText: normalizeText(`${ch.songName} ${ch.difficulty} ${ch.constant.toFixed(2)}`),
+    }));
+}
+function saveSongsDbToLocal(rawCharts, sourceLabel) {
+    localStorage.setItem(SONGS_DB_KEY, JSON.stringify(rawCharts));
+    localStorage.setItem(SONGS_DB_META_KEY, JSON.stringify({ sourceLabel, syncedAt: Date.now(), count: rawCharts.length }));
+}
+function loadSongsDbFromLocal() {
+    try {
+        const parsed = JSON.parse(localStorage.getItem(SONGS_DB_KEY) || "null");
+        if (!Array.isArray(parsed)) return null;
+        return dedupeAndNormalizeCharts(parsed);
+    } catch (_) { return null; }
+}
 
-    // local storage keys
-    const STORAGE_KEY = "arcaea_ptt_records_v2";
-    const SONGS_DB_KEY = "arcaea_songs_db_v2";
-    const SONGS_DB_META_KEY = "arcaea_songs_db_meta_v2";
-    const LOCAL_SYNC_ENDPOINT = "/api/songs/sync";
+// ── Vue App ────────────────────────────────────────────────────────────────
+createApp({
+    setup() {
+        // ── Auth state ────────────────────────────────────────────────────
+        const isInitializing  = ref(true);
+        const isLoggedIn      = ref(false);
+        const authToken       = ref(localStorage.getItem(TOKEN_KEY) || "");
+        const currentUsername = ref(localStorage.getItem(USERNAME_KEY) || "");
+        const authTab         = ref("login");
+        const authUsername    = ref("");
+        const authPassword    = ref("");
+        const authConfirm     = ref("");
+        const authError       = ref("");
+        const authLoading     = ref(false);
+        const showPw          = ref(false);
 
-    const ARCWIKI_TEMPLATE_RAW_URL = "https://r.jina.ai/http://arcwiki.mcd.blue/Template%3AChartConstant.json";
-    const ARCWIKI_TABLE_RAW_URL = "https://r.jina.ai/http://arcwiki.mcd.blue/index.php?mobileaction=toggle_view_desktop&title=%E5%AE%9A%E6%95%B0%E8%AF%A6%E8%A1%A8&variant=zh-tw";
-
-    const SONGS_SYNC_SOURCES = [
-        {
-            name: "ArcWiki template (direct)",
-            url: ARCWIKI_TEMPLATE_RAW_URL,
-            parser: "template"
-        },
-        {
-            name: "ArcWiki table (direct)",
-            url: ARCWIKI_TABLE_RAW_URL,
-            parser: "table"
+        // ── Toast ─────────────────────────────────────────────────────────
+        const toasts = ref([]);
+        function toast(message, type = "success") {
+            const id = Date.now() + Math.random();
+            toasts.value.push({ id, message, type });
+            setTimeout(() => { toasts.value = toasts.value.filter(t => t.id !== id); }, 3500);
         }
-    ];
 
-    createApp({
-        setup() {
-            const difficultyAliases = {
-                pst: ["past", "0"],
-                prs: ["present", "1"],
-                ftr: ["future", "2"],
-                byd: ["beyond", "3"],
-                etr: ["eternal", "3"]
-            };
+        // ── Song state ────────────────────────────────────────────────────
+        const isSyncingSongs = ref(false);
+        const syncStatus     = ref("");
+        const allCharts      = ref([]);
+        const searchSong     = ref("");
+        const selectedChartId = ref(null);
+        const scoreInput      = ref(9800000);
 
-            const isSyncingSongs = ref(false);
-            const syncStatus = ref("");
+        // ── Record state ──────────────────────────────────────────────────
+        const records          = ref([]);
+        const isLoadingRecords = ref(false);
+        const isSubmitting     = ref(false);
 
-            function normalizeText(input) {
-                return String(input || "")
-                    .normalize("NFKD")
-                    .replace(/[\u0300-\u036f]/g, "")
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, " ")
-                    .trim();
+        // ── API helper ────────────────────────────────────────────────────
+        async function api(method, path, body = null) {
+            const headers = { "Content-Type": "application/json" };
+            if (authToken.value) headers["Authorization"] = `Bearer ${authToken.value}`;
+            const res = await fetch(path, {
+                method, headers, cache: "no-store",
+                body: body ? JSON.stringify(body) : undefined,
+            });
+            let data = {};
+            try { data = await res.json(); } catch (_) {}
+            return { status: res.status, data };
+        }
+
+        // ── Auth ──────────────────────────────────────────────────────────
+        async function submitAuth() {
+            if (authLoading.value) return;
+            authError.value = "";
+            const username = authUsername.value.trim();
+            const password = authPassword.value.trim();
+            if (!username || !password) { authError.value = "請填寫所有欄位"; return; }
+            if (authTab.value === "register" && password !== authConfirm.value) {
+                authError.value = "兩次密碼不一致"; return;
             }
-
-            function normalizeDifficulty(token) {
-                const t = normalizeText(token);
-                if (!t) return null;
-                if (/\b(pst|past|0)\b/.test(t)) return "PST";
-                if (/\b(prs|present|1)\b/.test(t)) return "PRS";
-                if (/\b(ftr|future|2)\b/.test(t)) return "FTR";
-                if (/\b(byd|beyond|3)\b/.test(t)) return "BYD";
-                if (/\b(etr|eternal|4)\b/.test(t)) return "ETR";
-                return null;
-            }
-
-            function cleanSongName(text) {
-                return String(text || "")
-                    .replace(/\[[^\]]*\]/g, "")
-                    .replace(/\s+/g, " ")
-                    .trim();
-            }
-
-            function parseConstantValue(text) {
-                const raw = String(text || "").replace(/,/g, "");
-                const match = raw.match(/\d+(?:\.\d+)?/);
-                if (!match) return null;
-                const num = Number(match[0]);
-                if (!Number.isFinite(num)) return null;
-                if (num < 0 || num > 13) return null;
-                return Number(num.toFixed(2));
-            }
-
-            function dedupeAndNormalizeCharts(rawCharts) {
-                const map = new Map();
-                for (const row of rawCharts || []) {
-                    const songName = cleanSongName(row.songName);
-                    const difficulty = normalizeDifficulty(row.difficulty);
-                    const constant = parseConstantValue(row.constant);
-                    if (!songName || !difficulty || constant === null) continue;
-                    const key = `${normalizeText(songName)}|${difficulty}`;
-                    map.set(key, { songName, difficulty, constant });
+            authLoading.value = true;
+            try {
+                const path = authTab.value === "login" ? "/api/auth/login" : "/api/auth/register";
+                const ok   = authTab.value === "login" ? 200 : 201;
+                const { status, data } = await api("POST", path, { username, password });
+                if (status === ok) {
+                    authToken.value = data.token;
+                    currentUsername.value = data.username;
+                    localStorage.setItem(TOKEN_KEY, data.token);
+                    localStorage.setItem(USERNAME_KEY, data.username);
+                    isLoggedIn.value = true;
+                    await loadSongsFromApi();
+                    await loadRecordsFromApi();
+                } else {
+                    authError.value = data.error || "操作失敗，請稍後再試";
                 }
-
-                let id = 1;
-                return [...map.values()]
-                    .sort((a, b) => {
-                        const nameCmp = a.songName.localeCompare(b.songName);
-                        if (nameCmp !== 0) return nameCmp;
-                        return a.difficulty.localeCompare(b.difficulty);
-                    })
-                    .map((row) => ({ ...row, id: id++ }));
+            } catch (_) {
+                authError.value = "無法連接伺服器，請確認網路連線";
+            } finally {
+                authLoading.value = false;
             }
+        }
 
-            function decorateCharts(rawCharts) {
-                return rawCharts.map((ch) => {
-                    const diff = String(ch.difficulty || "").toLowerCase();
-                    const aliasTerms = difficultyAliases[diff] || [];
-                    const aliasText = (ch.aliases || []).join(" ");
-                    return {
-                        ...ch,
-                        display: `${ch.songName} [${ch.difficulty}]`,
-                        searchText: normalizeText(
-                            `${ch.songName} ${aliasText} ${ch.difficulty} ${aliasTerms.join(" ")} ${ch.constant.toFixed(2)} ${ch.constant.toFixed(1)}`
-                        )
-                    };
+        function logout() {
+            authToken.value = "";
+            currentUsername.value = "";
+            localStorage.removeItem(TOKEN_KEY);
+            localStorage.removeItem(USERNAME_KEY);
+            records.value = [];
+            isLoggedIn.value = false;
+        }
+
+        // ── Songs ─────────────────────────────────────────────────────────
+        async function loadSongsLocal() {
+            let local = loadSongsDbFromLocal();
+            if (!local?.length) { 
+                local = dedupeAndNormalizeCharts(songsDB); 
+                saveSongsDbToLocal(local, "seed"); 
+            }
+            allCharts.value = decorateCharts(local);
+            selectedChartId.value = allCharts.value[0]?.id || null;
+            syncStatus.value = "使用本機暫存定數（點「從 Wiki 同步」可抓取最新定數）";
+        }
+
+        async function syncSongs() {
+            if (isSyncingSongs.value) return;
+            isSyncingSongs.value = true;
+            syncStatus.value = "正在從 Wiki 抓取資料 (約 10-30 秒)...";
+            try {
+                const src = SONGS_SYNC_SOURCES[0];
+                const res = await fetch(src.url, {
+                    headers: { "Accept": "text/plain,*/*" }
                 });
+                if (!res.ok) throw new Error("HTTP " + res.status);
+                const text = await res.text();
+                
+                const rawCharts = parseChartConstantTemplateText(text, {});
+                if (rawCharts.length < 200) throw new Error(`取得的譜面數量異常 (${rawCharts.length})`);
+
+                const normalized = dedupeAndNormalizeCharts(rawCharts);
+                saveSongsDbToLocal(normalized, "wiki");
+                allCharts.value = decorateCharts(normalized);
+                selectedChartId.value = allCharts.value[0]?.id || null;
+                
+                syncStatus.value = `同步完成：${normalized.length} 譜面已儲存至 LocalStorage`;
+                toast(`成功從 Wiki 抓取 ${normalized.length} 首譜面 ✓`);
+            } catch (e) {
+                console.error("Wiki fetch error:", e);
+                syncStatus.value = "同步失敗：" + e.message;
+                toast("同步失敗，請稍後重試", "error");
+            } finally {
+                isSyncingSongs.value = false;
             }
+        }
 
-            function parseArcWikiTables(text) {
-                const parsed = [];
-                if (!text || typeof DOMParser === "undefined") return parsed;
+        // ── Records ───────────────────────────────────────────────────────
+        async function loadRecordsFromApi() {
+            isLoadingRecords.value = true;
+            try {
+                const { status, data } = await api("GET", "/api/records");
+                if (status === 200) {
+                    records.value = data.records || [];
+                } else if (status === 401) {
+                    logout();
+                }
+            } catch (_) {
+                toast("無法連接雲端，成績可能未更新", "warning");
+            } finally {
+                isLoadingRecords.value = false;
+            }
+        }
 
-                const doc = new DOMParser().parseFromString(text, "text/html");
-                const tables = [...doc.querySelectorAll("table")];
+        async function addRecord() {
+            if (!selectedChart.value) { toast("請先選擇譜面", "error"); return; }
+            if (isSubmitting.value) return;
+            isSubmitting.value = true;
+            let score = Number(scoreInput.value);
+            if (Number.isNaN(score)) score = 9800000;
+            score = Math.min(10100000, Math.max(0, score));
+            const ch = selectedChart.value;
+            const pttVal = computePtt(ch.constant, score);
+            try {
+                const { status, data } = await api("POST", "/api/records", {
+                    songName: ch.songName, difficulty: ch.difficulty,
+                    constant: ch.constant, score, ptt: pttVal, timestamp: Date.now(),
+                });
+                if (status === 201) {
+                    records.value = [data.record, ...records.value];
+                    scoreInput.value = 9800000;
+                    toast("成績已儲存至雲端 ✓");
+                } else {
+                    toast(data.error || "儲存失敗", "error");
+                }
+            } catch (_) {
+                toast("無法連接伺服器", "error");
+            } finally {
+                isSubmitting.value = false;
+            }
+        }
 
-                for (const table of tables) {
-                    const rows = [...table.querySelectorAll("tr")];
-                    if (!rows.length) continue;
+        async function deleteRecord(id) {
+            try {
+                const { status, data } = await api("DELETE", `/api/records/${id}`);
+                if (status === 200) {
+                    records.value = records.value.filter(r => r.id !== id);
+                    toast("已刪除");
+                } else {
+                    toast(data.error || "刪除失敗", "error");
+                }
+            } catch (_) { toast("刪除失敗", "error"); }
+        }
 
-                    const headerCells = [...rows[0].querySelectorAll("th, td")].map((c) => cleanSongName(c.textContent));
-                    const indexMap = {
-                        song: -1,
-                        PST: -1,
-                        PRS: -1,
-                        FTR: -1,
-                        BYD: -1,
-                        ETR: -1
-                    };
+        async function clearAllRecords() {
+            if (!confirm("刪除所有成績？此操作無法復原。")) return;
+            try {
+                const { status } = await api("DELETE", "/api/records");
+                if (status === 200) {
+                    records.value = [];
+                    toast("已清空所有成績");
+                } else {
+                    toast("清空失敗", "error");
+                }
+            } catch (_) { toast("清空失敗", "error"); }
+        }
 
-                    headerCells.forEach((header, idx) => {
-                        const h = normalizeText(header);
-                        if (indexMap.song === -1 && /(song|title|name|\u66f2\u540d)/.test(h)) indexMap.song = idx;
-                        const diff = normalizeDifficulty(h);
-                        if (diff && indexMap[diff] === -1) indexMap[diff] = idx;
-                    });
+        // ── Computed ──────────────────────────────────────────────────────
+        const filteredSongOptions = computed(() => {
+            const normalized = normalizeText(searchSong.value);
+            if (!normalized) return allCharts.value;
+            const terms = normalized.split(/\s+/).filter(Boolean);
+            return allCharts.value.filter(ch => terms.every(t => ch.searchText.includes(t)));
+        });
+        watch(filteredSongOptions, opts => {
+            if (opts.length && !opts.some(o => o.id === selectedChartId.value))
+                selectedChartId.value = opts[0].id;
+        });
 
-                    const diffColumns = Object.entries(indexMap).filter(([k, v]) => k !== "song" && v >= 0);
-                    if (indexMap.song < 0 || diffColumns.length < 2) continue;
+        const selectedChart    = computed(() => allCharts.value.find(c => c.id === selectedChartId.value) || null);
+        const tempPreviewPtt   = computed(() => {
+            if (!selectedChart.value) return null;
+            return computePtt(selectedChart.value.constant, Math.min(10100000, Math.max(0, Number(scoreInput.value) || 0)));
+        });
 
-                    for (const row of rows.slice(1)) {
-                        const cells = [...row.querySelectorAll("th, td")];
-                        if (!cells.length) continue;
+        const SONGS_SYNC_SOURCES = [
+            { name: "ArcWiki template raw json via r.jina.ai", url: "https://r.jina.ai/http://arcwiki.mcd.blue/index.php?title=Template:ChartConstant.json&action=raw", parser: "template" },
+            { name: "ArcWiki constants table via r.jina.ai", url: "https://r.jina.ai/http://arcwiki.mcd.blue/index.php?mobileaction=toggle_view_desktop&title=%E5%AE%9A%E6%95%B0%E8%AF%A6%E8%A1%A8&variant=zh-tw", parser: "table" }
+        ];
 
-                        const songName = cleanSongName(cells[indexMap.song]?.textContent || "");
-                        if (!songName) continue;
-
-                        for (const [diff, colIdx] of diffColumns) {
-                            const constant = parseConstantValue(cells[colIdx]?.textContent || "");
-                            if (constant === null) continue;
-                            parsed.push({ songName, difficulty: diff, constant });
-                        }
+        function parseChartConstantTemplateText(text, seedKeyToDisplayName) {
+            let data = {};
+            const jsMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+            try {
+                if (jsMatch && jsMatch[1]) {
+                    data = JSON.parse(jsMatch[1]);
+                } else {
+                    const firstBrace = text.indexOf('{');
+                    const lastBrace = text.lastIndexOf('}');
+                    if (firstBrace !== -1 && lastBrace !== -1) {
+                        data = JSON.parse(text.substring(firstBrace, lastBrace + 1));
                     }
                 }
-
-                return parsed;
+            } catch (e) {
+                console.error("Failed to parse JSON template:", e);
+                return [];
             }
 
-            function parseChartListText(text) {
-                const parsed = [];
-                const lines = String(text || "").split(/\r?\n/);
+            const diffOrder = ["PST", "PRS", "FTR", "BYD", "ETR"];
+            const charts = [];
+            let i = 1;
 
-                for (const line of lines) {
-                    if (!line.includes("|")) continue;
-                    const cols = line.split("|").map((c) => c.trim());
-                    if (cols.length < 6) continue;
-
-                    const songName = cleanSongName(cols[1]);
-                    const difficulty = normalizeDifficulty(cols[3]);
-                    const constant = parseConstantValue(cols[5]);
-
-                    if (!songName || !difficulty || constant === null) continue;
-                    parsed.push({ songName, difficulty, constant });
-                }
-
-                return parsed;
-            }
-
-            function toSongKey(input) {
-                return normalizeText(input).replace(/[^a-z0-9]+/g, "");
-            }
-
-            function parseChartConstantTemplateText(text, keyToDisplayName) {
-                const parsed = [];
-                const lines = String(text || "")
-                    .split(/\r?\n/)
-                    .map((line) => line.trim())
-                    .filter(Boolean);
-
-                const DIFF_ORDER = ["PST", "PRS", "FTR", "BYD", "ETR"];
-                let currentKey = null;
-                let slots = [];
-
-                const flush = () => {
-                    if (!currentKey || !slots.length) return;
-                    const displayName = keyToDisplayName.get(currentKey) || currentKey;
-
-                    for (let i = 0; i < Math.min(slots.length, DIFF_ORDER.length); i++) {
-                        const constant = slots[i];
-                        if (constant === null || constant === undefined) continue;
-                        parsed.push({
-                            songName: displayName,
-                            difficulty: DIFF_ORDER[i],
-                            constant
+            for (const [key, slots] of Object.entries(data)) {
+                if (!Array.isArray(slots)) continue;
+                const dName = key;
+                for (let k = 0; k < slots.length && k < diffOrder.length; k++) {
+                    const row = slots[k];
+                    if (row && typeof row === 'object' && row.constant != null) {
+                        charts.push({
+                            id: i++,
+                            songName: dName,
+                            difficulty: diffOrder[k],
+                            constant: parseFloat(row.constant)
                         });
                     }
-                };
-
-                for (const line of lines) {
-                    const constantMatch = line.match(/^constant\s+(\d+(?:\.\d+)?)/i);
-                    if (constantMatch) {
-                        slots.push(Number(constantMatch[1]));
-                        continue;
-                    }
-
-                    if (/^null$/i.test(line)) {
-                        slots.push(null);
-                        continue;
-                    }
-
-                    if (/^old\b/i.test(line) || /^(true|false)$/i.test(line)) {
-                        continue;
-                    }
-
-                    if (/^[a-z0-9][a-z0-9_]*$/i.test(line)) {
-                        flush();
-                        currentKey = line.toLowerCase();
-                        slots = [];
-                    }
-                }
-
-                flush();
-                return parsed;
-            }
-
-            function saveSongsDbToLocal(rawCharts, sourceUrl) {
-                localStorage.setItem(SONGS_DB_KEY, JSON.stringify(rawCharts));
-                localStorage.setItem(
-                    SONGS_DB_META_KEY,
-                    JSON.stringify({
-                        sourceUrl,
-                        syncedAt: Date.now(),
-                        count: rawCharts.length
-                    })
-                );
-            }
-
-            function loadSongsDbFromLocal() {
-                const raw = localStorage.getItem(SONGS_DB_KEY);
-                if (!raw) return null;
-                try {
-                    const parsed = JSON.parse(raw);
-                    if (!Array.isArray(parsed)) return null;
-                    return dedupeAndNormalizeCharts(parsed);
-                } catch (_) {
-                    return null;
                 }
             }
-
-            function loadSongsMeta() {
-                const raw = localStorage.getItem(SONGS_DB_META_KEY);
-                if (!raw) return null;
-                try {
-                    return JSON.parse(raw);
-                } catch (_) {
-                    return null;
-                }
-            }
-
-            const seedKeyToDisplayName = new Map(
-                songsDB.map((chart) => [toSongKey(chart.songName), chart.songName])
-            );
-
-            let localSongsDb = loadSongsDbFromLocal();
-            if (!localSongsDb?.length) {
-                localSongsDb = dedupeAndNormalizeCharts(songsDB);
-                saveSongsDbToLocal(localSongsDb, "built-in-seed");
-            }
-
-            const allCharts = ref(decorateCharts(localSongsDb));
-            const searchSong = ref("");
-            const selectedChartId = ref(allCharts.value[0]?.id || null);
-            const scoreInput = ref(9800000);
-            const records = ref([]);
-
-            const syncedMeta = loadSongsMeta();
-            if (syncedMeta?.syncedAt) {
-                const dt = new Date(syncedMeta.syncedAt);
-                const mm = `${dt.getMonth() + 1}`.padStart(2, "0");
-                const dd = `${dt.getDate()}`.padStart(2, "0");
-                const hh = `${dt.getHours()}`.padStart(2, "0");
-                const mi = `${dt.getMinutes()}`.padStart(2, "0");
-                syncStatus.value = `已載入本機定數 (${syncedMeta.count || allCharts.value.length} 譜面, ${mm}/${dd} ${hh}:${mi})`;
-            }
-
-            async function syncSongsDbFromWiki() {
-                if (isSyncingSongs.value) return;
-                isSyncingSongs.value = true;
-                syncStatus.value = "同步中：優先使用本機後端...";
-
-                const errors = [];
-                try {
-                    // 1) Try local backend first (recommended: avoids browser CORS)
-                    try {
-                        if (location.protocol === "file:") {
-                            throw new Error("opened_as_file_url");
-                        }
-                        const localApiUrl = `${LOCAL_SYNC_ENDPOINT}?t=${Date.now()}`;
-                        const localRes = await fetch(localApiUrl, { cache: "no-store" });
-                        if (!localRes.ok) {
-                            throw new Error(`HTTP ${localRes.status}`);
-                        }
-
-                        const payload = await localRes.json();
-                        const normalized = dedupeAndNormalizeCharts(payload?.charts || []);
-                        if (normalized.length < 200) {
-                            throw new Error(`Too few charts parsed (${normalized.length})`);
-                        }
-
-                        allCharts.value = decorateCharts(normalized);
-                        selectedChartId.value = allCharts.value[0]?.id || null;
-                        saveSongsDbToLocal(normalized, payload?.source || "local-backend");
-                        syncStatus.value = `同步完成：${normalized.length} 譜面（來源：本機後端）`;
-                        return;
-                    } catch (err) {
-                        errors.push(`local-backend -> ${err.message}`);
-                    }
-
-                    // 2) Fallback to client-side remote fetch (may fail due CORS)
-                    for (const source of SONGS_SYNC_SOURCES) {
-                        try {
-                            const response = await fetch(source.url, { cache: "no-store" });
-                            if (!response.ok) {
-                                throw new Error(`HTTP ${response.status}`);
-                            }
-
-                            const text = await response.text();
-                            let parsed = [];
-
-                            if (source.parser === "template") {
-                                parsed = parseChartConstantTemplateText(text, seedKeyToDisplayName);
-                            } else {
-                                parsed = parseArcWikiTables(text);
-                                if (parsed.length < 200) {
-                                    parsed = parseChartListText(text);
-                                }
-                            }
-
-                            const normalized = dedupeAndNormalizeCharts(parsed);
-                            if (normalized.length < 200) {
-                                throw new Error(`Too few charts parsed (${normalized.length})`);
-                            }
-
-                            allCharts.value = decorateCharts(normalized);
-                            selectedChartId.value = allCharts.value[0]?.id || null;
-                            saveSongsDbToLocal(normalized, source.name);
-                            syncStatus.value = `同步完成：${normalized.length} 譜面（來源：${source.name}）`;
-                            return;
-                        } catch (err) {
-                            errors.push(`${source.name} -> ${err.message}`);
-                        }
-                    }
-
-                    if (errors.some((msg) => msg.includes("opened_as_file_url"))) {
-                        syncStatus.value = "同步失敗：請先執行 python server.py，再用 http://127.0.0.1:8000 開啟此頁。";
-                    } else {
-                        syncStatus.value = `同步失敗：請改用本機後端執行（${errors[0] || "unknown error"}）`;
-                    }
-                    console.error("songs sync failed", errors);
-                } finally {
-                    isSyncingSongs.value = false;
-                }
-            }
-
-            const filteredSongOptions = computed(() => {
-                const normalized = normalizeText(searchSong.value);
-                if (!normalized) return allCharts.value;
-                const terms = normalized.split(/\s+/).filter(Boolean);
-                return allCharts.value.filter((chart) => terms.every((term) => chart.searchText.includes(term)));
-            });
-
-            watch(filteredSongOptions, (newOptions) => {
-                if (!newOptions.length) return;
-                if (!newOptions.some((opt) => opt.id === selectedChartId.value)) {
-                    selectedChartId.value = newOptions[0].id;
-                }
-            });
-
-            const selectedChart = computed(() => {
-                if (!selectedChartId.value) return null;
-                return allCharts.value.find((c) => c.id === selectedChartId.value) || null;
-            });
-
-            const tempPreviewPtt = computed(() => {
-                if (!selectedChart.value) return null;
-                const score = Math.min(10100000, Math.max(0, Number(scoreInput.value) || 0));
-                return computePtt(selectedChart.value.constant, score);
-            });
-
-            const addRecord = () => {
-                if (!selectedChart.value) {
-                    alert("Please select a chart first.");
-                    return;
-                }
-
-                let score = Number(scoreInput.value);
-                if (Number.isNaN(score)) score = 9800000;
-                score = Math.min(10100000, Math.max(0, score));
-
-                const constantVal = selectedChart.value.constant;
-                const pttVal = computePtt(constantVal, score);
-                const newRecord = {
-                    id: Date.now() + Math.random() * 10000,
-                    chartId: selectedChart.value.id,
-                    songName: selectedChart.value.songName,
-                    difficulty: selectedChart.value.difficulty,
-                    constant: constantVal,
-                    score,
-                    ptt: pttVal,
-                    timestamp: Date.now()
-                };
-
-                records.value = [newRecord, ...records.value];
-                scoreInput.value = 9800000;
-            };
-
-            const deleteRecord = (id) => {
-                records.value = records.value.filter((r) => r.id !== id);
-            };
-
-            const clearAllRecords = () => {
-                if (confirm("Delete all records? This action cannot be undone.")) {
-                    records.value = [];
-                }
-            };
-
-            const allRecords = computed(() => records.value);
-            const totalRecords = computed(() => records.value.length);
-
-            const best30List = computed(() => {
-                const sorted = [...records.value].sort((a, b) => b.ptt - a.ptt);
-                return sorted.slice(0, 30);
-            });
-
-            const recent30List = computed(() => {
-                const sorted = [...records.value].sort((a, b) => b.timestamp - a.timestamp);
-                return sorted.slice(0, 30);
-            });
-
-            const best30Sum = computed(() => best30List.value.reduce((sum, r) => sum + r.ptt, 0));
-            const best30Count = computed(() => best30List.value.length);
-            const bestAvg = computed(() => (best30Count.value ? best30Sum.value / best30Count.value : 0));
-
-            const recent30Sum = computed(() => recent30List.value.reduce((sum, r) => sum + r.ptt, 0));
-            const recent30Count = computed(() => recent30List.value.length);
-            const recentAvg = computed(() => (recent30Count.value ? recent30Sum.value / recent30Count.value : 0));
-
-            const currentPtt = computed(() => {
-                const totalSum = best30Sum.value + recent30Sum.value;
-                const totalCnt = best30Count.value + recent30Count.value;
-                if (totalCnt === 0) return 0;
-                return totalSum / totalCnt;
-            });
-
-            function saveToLocal() {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(records.value));
-            }
-
-            function loadFromLocal() {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                if (!raw) return;
-                try {
-                    const parsed = JSON.parse(raw);
-                    if (Array.isArray(parsed)) {
-                        records.value = parsed;
-                    }
-                } catch (_) {
-                    // ignore invalid local cache
-                }
-            }
-
-            watch(
-                records,
-                () => {
-                    saveToLocal();
-                },
-                { deep: true }
-            );
-
-            const formatScore = (score) => (score / 10000).toFixed(2) + "w";
-            const formatTime = (ts) => {
-                if (!ts) return "";
-                const d = new Date(ts);
-                return `${d.getMonth() + 1}/${d.getDate()} ${d
-                    .getHours()
-                    .toString()
-                    .padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
-            };
-
-            onMounted(() => {
-                loadFromLocal();
-                if (allCharts.value.length && !selectedChartId.value) {
-                    selectedChartId.value = allCharts.value[0].id;
-                }
-            });
-
-            return {
-                searchSong,
-                selectedChartId,
-                scoreInput,
-                records,
-                allCharts,
-                filteredSongOptions,
-                selectedChart,
-                tempPreviewPtt,
-                addRecord,
-                deleteRecord,
-                clearAllRecords,
-                best30List,
-                recent30List,
-                allRecords,
-                totalRecords,
-                best30Count,
-                recent30Count,
-                bestAvg,
-                recentAvg,
-                currentPtt,
-                formatScore,
-                formatTime,
-                syncSongsDbFromWiki,
-                isSyncingSongs,
-                syncStatus
-            };
+            return charts;
         }
-    }).mount('#app');
+
+        const allRecords    = computed(() => records.value);
+        const totalRecords  = computed(() => records.value.length);
+        const best30List    = computed(() => [...records.value].sort((a,b) => b.ptt - a.ptt).slice(0,30));
+        const recent30List  = computed(() => [...records.value].sort((a,b) => b.timestamp - a.timestamp).slice(0,30));
+        const best30Count   = computed(() => best30List.value.length);
+        const recent30Count = computed(() => recent30List.value.length);
+        const bestAvg       = computed(() => best30Count.value ? best30List.value.reduce((s,r) => s+r.ptt,0)/best30Count.value : 0);
+        const recentAvg     = computed(() => recent30Count.value ? recent30List.value.reduce((s,r) => s+r.ptt,0)/recent30Count.value : 0);
+        const currentPtt    = computed(() => {
+            const sum = best30List.value.reduce((s,r)=>s+r.ptt,0) + recent30List.value.reduce((s,r)=>s+r.ptt,0);
+            const cnt = best30Count.value + recent30Count.value;
+            return cnt ? sum / cnt : 0;
+        });
+
+        const formatScore = score => (score / 10000).toFixed(2) + "w";
+        const formatTime  = ts => {
+            if (!ts) return "";
+            const d = new Date(ts);
+            return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+        };
+
+        // ── Init ──────────────────────────────────────────────────────────
+        onMounted(async () => {
+            const storedToken = localStorage.getItem(TOKEN_KEY);
+            if (storedToken) {
+                authToken.value = storedToken;
+                currentUsername.value = localStorage.getItem(USERNAME_KEY) || "";
+                try {
+                    const { status, data } = await api("GET", "/api/records");
+                    if (status === 200) {
+                        isLoggedIn.value = true;
+                        records.value = data.records || [];
+                        await loadSongsLocal();
+                    } else {
+                        // Token expired/invalid
+                        logout();
+                    }
+                } catch (_) {
+                    // Server unreachable — treat as logged in with local fallback
+                    isLoggedIn.value = true;
+                    await loadSongsLocal();
+                    toast("離線模式：無法連接伺服器", "warning");
+                }
+            }
+            isInitializing.value = false;
+        });
+
+        return {
+            isInitializing, isLoggedIn, currentUsername,
+            authTab, authUsername, authPassword, authConfirm, authError, authLoading, showPw, submitAuth, logout,
+            toasts,
+            isSyncingSongs, syncStatus, syncSongs,
+            allCharts, searchSong, selectedChartId, filteredSongOptions, selectedChart, scoreInput, tempPreviewPtt,
+            records, isLoadingRecords, isSubmitting,
+            addRecord, deleteRecord, clearAllRecords,
+            best30List, recent30List, allRecords, totalRecords,
+            best30Count, recent30Count, bestAvg, recentAvg, currentPtt,
+            formatScore, formatTime,
+        };
+    }
+}).mount('#app');
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
