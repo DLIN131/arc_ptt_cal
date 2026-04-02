@@ -12,6 +12,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 HOST = os.getenv("HOST", "0.0.0.0")
 PORT = int(os.getenv("PORT", "10000"))
 INDEX_FILE = "deepseek_html_20260402_d78591.html"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 SYNC_SOURCES = [
     {
@@ -187,6 +188,9 @@ def sync_charts_from_sources():
 
 
 class AppHandler(SimpleHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, directory=BASE_DIR, **kwargs)
+
     def do_GET(self):  # noqa: N802
         parsed = urllib.parse.urlsplit(self.path)
 
@@ -197,10 +201,8 @@ class AppHandler(SimpleHTTPRequestHandler):
             self.wfile.write(b"ok")
             return
 
-        if parsed.path == "/":
-            self.send_response(HTTPStatus.FOUND)
-            self.send_header("Location", f"/{INDEX_FILE}")
-            self.end_headers()
+        if parsed.path in ("/", "/index.html", f"/{INDEX_FILE}"):
+            self._send_index_html()
             return
 
         if parsed.path == "/api/songs/sync":
@@ -209,6 +211,21 @@ class AppHandler(SimpleHTTPRequestHandler):
             return
 
         super().do_GET()
+
+    def _send_index_html(self):
+        index_path = os.path.join(BASE_DIR, INDEX_FILE)
+        if not os.path.isfile(index_path):
+            self.send_error(HTTPStatus.NOT_FOUND, f"index file not found: {INDEX_FILE}")
+            return
+
+        with open(index_path, "rb") as f:
+            body = f.read()
+
+        self.send_response(HTTPStatus.OK)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
 
     def _send_json(self, payload, status=HTTPStatus.OK):
         body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
